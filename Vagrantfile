@@ -14,7 +14,10 @@ Vagrant.configure("2") do |config|
   config.vm.define machine_name
 
   # Name of box to install with
-  config.vm.box = "mwrock/Windows2016"
+  #config.vm.box = "mwrock/Windows2016"
+  #config.vm.box = "StefanScherer/windows_2019"
+  config.vm.box = "rpoint/windows2019"
+  config.vm.box_version = ">= 2"
 
   # Communicator type
   config.vm.communicator = "winrm"
