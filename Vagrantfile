@@ -4,7 +4,7 @@
 #####################################################################################
 # Configuration settings
 #####################################################################################
-machine_name = "Vagrant out-of-memory test"
+machine_name = "out-of-memory"
 hyperv_switch = "Default Switch"
 
 #####################################################################################
@@ -45,9 +45,9 @@ Vagrant.configure("2") do |config|
     # The name specified here is used for the name of the generated VM
     vb.name = machine_name
     vb.gui = true
-    vb.cpus = 4
-    vb.memory = 20480
-    vb.maxmemory = 32768
+    # vb.cpus = 4
+    # vb.memory = 20480
+    # vb.maxmemory = 32768
     vb.customize ["modifyvm", :id, "--vram", "128"]
     vb.customize ["setextradata", "global", "GUI/SuppressMessages", "all" ]
     vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
@@ -65,9 +65,9 @@ Vagrant.configure("2") do |config|
   # Hyperv configuration
   config.vm.provider :hyperv do |h|
     h.vmname = machine_name
-    h.cpus = 4
-    h.memory = 20480
-    h.maxmemory = 32768
+    # h.cpus = 4
+    # h.memory = 20480
+    # h.maxmemory = 32768
 
     # Specify the virtual switch we want to use
     config.vm.network "public_network", bridge: hyperv_switch
@@ -100,7 +100,5 @@ Vagrant.configure("2") do |config|
   #====================================================================================
   config.vm.provision "Install choco", privileged: false, type: "shell", path: "scripts/install-choco.ps1"
 
-  #config.vm.provision "Install Visual Studio", privileged: false, type: "shell", path: "scripts/install-visual-studio.ps1"
-  #config.vm.provision "Reboot after installing Visual Studio", privileged: false, type: "shell", inline: "", reboot: true
-  config.vm.provision "Install ReSharper", privileged: true, type: "shell", inline: "cinst -y --no-progress resharper" # Must be run with privileged: true to avoid inexplicable 'Out of memory'
+  config.vm.provision "Install ReSharper", privileged: false, type: "shell", inline: "cinst -y --no-progress resharper" # Must be run with privileged: true to avoid inexplicable 'Out of memory'
 end
