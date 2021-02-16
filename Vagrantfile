@@ -15,9 +15,7 @@ Vagrant.configure("2") do |config|
 
   # Name of box to install with
   #config.vm.box = "mwrock/Windows2016"
-  #config.vm.box = "StefanScherer/windows_2019"
-  config.vm.box = "rpoint/windows2019"
-  config.vm.box_version = ">= 2"
+  config.vm.box = "StefanScherer/windows_2019"
 
   # Communicator type
   config.vm.communicator = "winrm"
@@ -49,8 +47,7 @@ Vagrant.configure("2") do |config|
     vb.name = machine_name
     vb.gui = true
     # vb.cpus = 4
-    # vb.memory = 20480
-    # vb.maxmemory = 32768
+    vb.memory = 20480
     vb.customize ["modifyvm", :id, "--vram", "128"]
     vb.customize ["setextradata", "global", "GUI/SuppressMessages", "all" ]
     vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
@@ -68,9 +65,8 @@ Vagrant.configure("2") do |config|
   # Hyperv configuration
   config.vm.provider :hyperv do |h|
     h.vmname = machine_name
-    # h.cpus = 4
-    # h.memory = 20480
-    # h.maxmemory = 32768
+    h.cpus = 4
+    h.memory = 20480
 
     # Specify the virtual switch we want to use
     config.vm.network "public_network", bridge: hyperv_switch
