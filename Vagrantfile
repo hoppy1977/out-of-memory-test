@@ -46,7 +46,6 @@ Vagrant.configure("2") do |config|
     # The name specified here is used for the name of the generated VM
     vb.name = machine_name
     vb.gui = true
-    # vb.cpus = 4
     vb.memory = 20480
     vb.customize ["modifyvm", :id, "--vram", "128"]
     vb.customize ["setextradata", "global", "GUI/SuppressMessages", "all" ]
@@ -65,7 +64,6 @@ Vagrant.configure("2") do |config|
   # Hyperv configuration
   config.vm.provider :hyperv do |h|
     h.vmname = machine_name
-    h.cpus = 4
     h.memory = 20480
 
     # Specify the virtual switch we want to use
@@ -79,25 +77,17 @@ Vagrant.configure("2") do |config|
   # Provisioners
   #####################################################################################
 
-  #====================================================================================
-  # Copy files to guest
-  #====================================================================================
-  # Move scripts to documents folder
-  config.vm.provision "Copy scripts", type: "file", source: "scripts", destination: "scripts"
-
-  #====================================================================================
-  # Configure the machine
-  #====================================================================================
+  # Configure powershell
   config.vm.provision "Give PowerShell admin rights",
     privileged: false,
     type: "shell",
     inline: %q"Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force -Scope CurrentUser",
     powershell_args: "-ExecutionPolicy Unrestricted"
 
-  #====================================================================================
-  # Install software
-  #====================================================================================
-  config.vm.provision "Install choco", privileged: false, type: "shell", path: "scripts/install-choco.ps1"
+  # Choco
+  config.vm.provision "Install choco", privileged: false, type: "shell", inline: "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))"
 
-  config.vm.provision "Install ReSharper", privileged: false, type: "shell", inline: "cinst -y --no-progress resharper" # Must be run with privileged: true to avoid inexplicable 'Out of memory'
+  # ReSharper
+  config.vm.provision "Install ReSharper", privileged: false, type: "shell", inline: "cinst -y --no-progress resharper" # This will FAIL - will give inexplicable 'OutOfMemoryException'
+  #config.vm.provision "Install ReSharper", privileged: true, type: "shell", inline: "cinst -y --no-progress resharper" # This will work!
 end
